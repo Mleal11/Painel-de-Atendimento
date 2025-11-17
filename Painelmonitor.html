@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Atendimento ao Público</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    
+    <style>
+        /* =================================
+           1. Variáveis e Configurações Base
+           (Funcionalidade 19: Tema Azul Padrão)
+           ================================= */
+        :root {
+            /* Tema Padrão Azul (Cores Modernas) */
+            --bs-primary: #007bff; /* Azul vibrante */
+            --bs-info: #17a2b8; /* Ciano moderno */
+            --bs-success: #28a745; /* Verde padrão */
+            --bs-secondary: #6c757d;
+            --bs-light: #f8f9fa;
+            --bs-dark: #343a40;
+            --main-bg-color: var(--bs-light);
+            --text-color: #212529;
+            --bs-warning: #ffc107; /* Amarelo padrão */
+            --bs-danger: #dc3545; /* Vermelho padrão */
+        }
+
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Aplicação dos Temas Dinâmicos (Funcionalidade 19) */
+        body.tema-verde { 
+            --bs-primary: #008000;
+            --bs-info: #3cb371; 
+            --bs-success: #00aa55; 
+        }
+        body.tema-roxo { 
+            --bs-primary: #6f42c1; 
+            --bs-info: #e3aefb; 
+            --bs-success: #8800ff; 
+        }
+
+        /* Aplicação das variáveis CSS do tema nos componentes */
+        .bg-primary { background-color: var(--bs-primary) !important; }
+        .bg-info { background-color: var(--bs-info) !important; }
+        .bg-success { background-color: var(--bs-success) !important; }
+        .bg-secondary { background-color: var(--bs-secondary) !important; }
+        .bg-warning { background-color: var(--bs-warning) !important; }
+        .text-primary { color: var(--bs-primary) !important; }
+        .text-info { color: var(--bs-info) !important; }
+
+        /* =================================
+           2. Layout e Componentes
+           ================================= */
+        h1, h2, h3 { font-weight: 300; } /* Fontes mais leves */
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .card-header {
+            border-top-left-radius: 12px !important;
+            border-top-right-radius: 12px !important;
+            font-weight: 500;
+        }
+        .owl-carousel .item video { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 8px; 
+        }
+
+        /* =================================
+           3. Seção Principal (Chamada) - Funcionalidade 7 e 20
+           ================================= */
+        .current-ticket {
+            font-size: 6rem; /* Aumentado para maior impacto */
+            font-weight: 900;
+            text-align: center;
+            color: var(--bs-danger); /* Vermelho */
+            animation: pulse 1.5s infinite;
+            line-height: 1.2;
+        }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        /* Destaque Prioritário (Amarelo forte) */
+        .prioridade-destaque {
+            color: var(--bs-warning) !important; 
+            text-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+        }
+
+        /* =================================
+           4. Histórico e Rodapé
+           ================================= */
+        .previous-calls .header { 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            color: var(--bs-dark); 
+            border-bottom: 3px solid var(--bs-primary); /* Linha destacada */
+            margin-bottom: 10px; 
+        }
+        .previous-calls .row { 
+            padding: 8px 0; 
+            margin: 5px 0; 
+            border-bottom: 1px dashed #ced4da; /* Linha mais suave */
+        }
+        .previous-calls .call-item { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+        }
+        .call-item.prioritaria .col-4:first-child { 
+            color: #e0a800; 
+            font-weight: 900; 
+        }
+        
+        /* Rodapé (Anúncios) */
+        .announcement-bar { 
+            background-color: var(--bs-dark); 
+            color: #ffffff; 
+            padding: 15px 0; 
+            overflow: hidden; 
+            border-top: 5px solid var(--bs-warning); /* Linha de destaque */
+            margin-top: auto; /* Garante que ocupe o rodapé */
+        }
+        .announcement-text { 
+            font-size: 1.6rem; 
+            font-weight: 700; 
+        }
+        .time-display { 
+            font-size: 2.5rem; 
+            font-weight: 900; 
+            color: var(--bs-primary); 
+        }
+        .contact-info { 
+            padding: 15px; 
+            font-size: 1.2rem; 
+            color: #fff;
+        }
+        .contact-info strong { 
+            display: block; 
+            margin-top: 8px; 
+            font-size: 1.4rem; 
+            color: var(--bs-info);
+        }
+        
+        /* =================================
+           5. Estilos de Acessibilidade (Funcionalidade 14)
+           ================================= */
+        #accessibility-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        /* Fonte Grande */
+        body.fonte-grande { 
+            font-size: 1.25em; /* Aumenta a fonte base */
+        }
+        body.fonte-grande .current-ticket { 
+            font-size: 8rem; 
+        } 
+        body.fonte-grande .announcement-text { 
+            font-size: 2rem; 
+        }
+        body.fonte-grande .previous-calls .call-item {
+            font-size: 1.6rem;
+        }
+
+        /* Alto Contraste */
+        body.alto-contraste { 
+            background-color: #000 !important; 
+            color: #fff !important; 
+        }
+        body.alto-contraste .card, 
+        body.alto-contraste .card-body,
+        body.alto-contraste .contact-info { 
+            background-color: #333 !important; 
+            border-color: #fff !important; 
+            color: #fff !important; 
+        }
+        body.alto-contraste .previous-calls .header, 
+        body.alto-contraste .text-secondary,
+        body.alto-contraste .text-muted { 
+            color: #ccc !important; 
+        }
+        body.alto-contraste .bg-primary, 
+        body.alto-contraste .bg-info, 
+        body.alto-contraste .bg-success,
+        body.alto-contraste .bg-warning {
+            filter: brightness(180%); /* Força um contraste maior */
+            color: #000; 
+        }
+        body.alto-contraste .bg-primary h1,
+        body.alto-contraste .bg-info h2,
+        body.alto-contraste .bg-success h2,
+        body.alto-contraste .bg-warning h2 {
+            color: #000 !important;
+        }
+        body.alto-contraste .prioridade-destaque {
+            color: #ffff00 !important;
+            text-shadow: 0 0 15px rgba(255, 255, 0, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div id="accessibility-controls">
+        <button class="btn btn-sm btn-dark" onclick="toggleAcessibility('contraste')">Alto Contraste</button>
+        <button class="btn btn-sm btn-dark" onclick="toggleAcessibility('fonte')">A+</button>
+    </div>
+    
+    <header class="bg-primary text-white text-center py-3">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-8 text-start">
+                    <h1>Painel de Atendimento</h1>
+                </div>
+                <div class="col-4 text-end">
+                    <div id="relogio" class="fs-4 fw-bold">---</div> 
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row">
+            
+            <div class="col-md-4">
+                <div class="card mt-3">
+                    <div class="card-header bg-info text-white">
+                        <h2>Informações & Tempo de Espera</h2>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-primary mb-3">Bem-vindo à Nossa Empresa!</h4>
+                        <p>Nossa missão é garantir um atendimento rápido e eficiente. Agradecemos sua paciência.</p>
+                        
+                        <hr>
+                        
+                        <h4 class="mt-3 text-secondary">
+                            Tempo médio de espera:
+                            <span id="tempoEspera" class="time-display">---</span>
+                        </h4>
+                        <p class="text-muted small">Atenção: Este é um tempo estimado e pode variar.</p>
+                    </div>
+                </div>
+
+                <div class="card mt-3 bg-dark text-white">
+                    <div class="card-header">
+                        <h4 class="mb-0">Contate-nos</h4>
+                    </div>
+                    <div class="card-body contact-info">
+                        <p>Telefone: <strong>(11) 98765-4321</strong></p>
+                        <p class="mb-0">Email: <strong>contato@suaempresa.com.br</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mt-3 h-100">
+                    <div class="card-header bg-secondary text-white">
+                        <h2>Mídia</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="owl-carousel" id="videoCarousel">
+                            <div class="item"><video src="video1.mp4" autoplay loop muted></video></div>
+                            <div class="item"><video src="video2.mp4" autoplay loop muted></video></div>
+                            <div class="item"><video src="video3.mp4" autoplay loop muted></video></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mt-3 h-100">
+                    <div class="card-header bg-success text-white">
+                        <h2>Últimos Atendimentos</h2>
+                    </div>
+                    <div class="card-body previous-calls" id="previousCallsContainer">
+                        <div class="row header">
+                            <div class="col-4">SENHA</div>
+                            <div class="col-4">GUICHÊ</div>
+                            <div class="col-4">HORA</div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h2>Sua Senha Está Sendo Chamada!</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>Senha:</h3>
+                                <div id="currentTicket" class="current-ticket">---</div>
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Guichê:</h3>
+                                <div id="currentWindow" class="current-ticket text-info">---</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="announcement-bar">
+        <div class="container-fluid">
+               <marquee class="announcement-text" behavior="scroll" direction="left" scrollamount="8">
+                ✨ PROMOÇÃO DA SEMANA: Descontos de até 30% em todos os nossos serviços! Fale com o seu atendente. | NOVAS INSTALAÇÕES: Agora estamos abertos até às 18h! ✨
+            </marquee>
+        </div>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+        // --- Variáveis Globais (Usaremos document.getElementById para maior robustez) ---
+        const ticketElement = document.getElementById('currentTicket');
+        const windowElement = document.getElementById('currentWindow');
+        const tempoEsperaElement = document.getElementById('tempoEspera');
+        const previousCallsContainer = document.getElementById('previousCallsContainer');
+        const relogioElement = document.getElementById('relogio');
+        const body = document.body;
+
+        // Funcionalidade 19: LÓGICA DE APLICAÇÃO DE TEMA
+        function initTheme() {
+            const storedTema = localStorage.getItem('painelTema') || 'azul';
+            // Remove classes existentes de tema
+            body.className = body.className.replace(/\b(tema-verde|tema-roxo)\b/g, '');
+
+            if (storedTema !== 'azul') {
+                body.classList.add(`tema-${storedTema}`);
+            }
+        }
+        
+        // Funcionalidade 14: LÓGICA DE ACESSIBILIDADE 
+        function toggleAcessibility(feature) {
+            if (feature === 'contraste') {
+                body.classList.toggle('alto-contraste');
+                localStorage.setItem('acessibilidade_contraste', body.classList.contains('alto-contraste'));
+            } else if (feature === 'fonte') {
+                body.classList.toggle('fonte-grande');
+                localStorage.setItem('acessibilidade_fonte', body.classList.contains('fonte-grande'));
+            }
+        }
+        function initAcessibility() {
+            if (localStorage.getItem('acessibilidade_contraste') === 'true') {
+                body.classList.add('alto-contraste');
+            }
+            if (localStorage.getItem('acessibilidade_fonte') === 'true') {
+                body.classList.add('fonte-grande');
+            }
+        }
+        
+        // Funcionalidade 4: CÓDIGO DO RELÓGIO (CORRIGIDO)
+        function atualizarRelogio() {
+            const agora = new Date();
+            // CORREÇÃO: Usando 'America/Sao_Paulo' para garantir a formatação correta.
+            const opcoesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' };
+            const opcoesData = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' };
+            
+            // Tratamento de erro caso a API de Intl.DateTimeFormat falhe
+            try {
+                const dataFormatada = agora.toLocaleDateString('pt-BR', opcoesData);
+                const horaFormatada = agora.toLocaleTimeString('pt-BR', opcoesHora);
+                const textoRelogio = `${dataFormatada} | ${horaFormatada}`;
+                if(relogioElement) relogioElement.textContent = textoRelogio;
+            } catch (e) {
+                // Se falhar, use um formato simples
+                const horaSimples = agora.getHours().toString().padStart(2, '0') + ':' + agora.getMinutes().toString().padStart(2, '0');
+                if(relogioElement) relogioElement.textContent = `Erro de Data | ${horaSimples}`;
+            }
+        }
+        
+        // Funcionalidade 1: CÓDIGO DO CARROSSEL (Mantendo jQuery pois é a dependência do Owl)
+        $(document).ready(function() {
+            $('#videoCarousel').owlCarousel({
+                items: 1, loop: true, autoplay: true, autoplayTimeout: 5000, nav: false, dots: false,
+            });
+        });
+
+        // -----------------------------------------------------------------------
+        // ✅ FUNÇÃO DE MONITORAMENTO (JavaScript Puro para garantir a leitura)
+        // -----------------------------------------------------------------------
+        
+        function updateMonitor() {
+            initTheme(); 
+            initAcessibility(); // Recarrega a acessibilidade a cada ciclo
+
+            // 1. DADOS ATUAIS LIDOS DO DOM (para comparação)
+            const oldTicket = ticketElement ? ticketElement.textContent : '---';
+            const oldWindow = windowElement ? windowElement.textContent : '---';
+            
+            // 2. DADOS NOVOS LIDOS DO LOCALSTORAGE
+            const currentTicket = localStorage.getItem('currentTicket') || '---';
+            const currentWindow = localStorage.getItem('currentWindow') || '---';
+            const estimatedWaitTime = localStorage.getItem('estimatedWaitTime') || '---';
+
+            // 3. ATUALIZAÇÃO IMEDIATA DO DISPLAY PRINCIPAL E TEMPO DE ESPERA
+            if(ticketElement) ticketElement.textContent = currentTicket;
+            if(windowElement) windowElement.textContent = currentWindow;
+            if(tempoEsperaElement) tempoEsperaElement.textContent = estimatedWaitTime;
+
+            // 4. ANIMAÇÃO E DESTAQUE DE PRIORIDADE (Funcionalidade 7 e 20)
+            const isPrioritario = currentTicket.startsWith('P-');
+
+            if (ticketElement) {
+                // 4a. DESTAQUE DE PRIORIDADE 
+                if(isPrioritario) {
+                    ticketElement.classList.add('prioridade-destaque');
+                } else {
+                    ticketElement.classList.remove('prioridade-destaque');
+                }
+
+                // 4b. VERIFICA MUDANÇA E APLICA FLASH VISUAL
+                const hasChanged = (currentTicket !== oldTicket || currentWindow !== oldWindow);
+
+                if (hasChanged && currentTicket !== '---' && currentTicket !== oldTicket) {
+                    
+                    // Adiciona flash visual (Borda vermelha no cartão)
+                    const mainCard = document.querySelector('.card .bg-warning').closest('.card');
+                    mainCard.classList.add('border', 'border-5', 'border-danger'); 
+                    windowElement.classList.remove('text-info'); 
+
+                    setTimeout(() => {
+                        // Remove o flash
+                        mainCard.classList.remove('border', 'border-5', 'border-danger');
+                        windowElement.classList.add('text-info'); // Restaura cor
+                    }, 1000); // Aumentei o tempo para ser mais perceptível
+                }
+            }
+
+            
+            // 5. ATUALIZA LISTA DE CHAMADAS ANTERIORES (Funcionalidade 3 e 20)
+            if (previousCallsContainer) {
+                const previousCalls = JSON.parse(localStorage.getItem('previousCalls') || '[]');
+                
+                // Limpar lista antiga (exceto o cabeçalho)
+                let itemsToRemove = previousCallsContainer.querySelectorAll('.call-item');
+                itemsToRemove.forEach(item => item.remove());
+                
+                const headerRow = previousCallsContainer.querySelector('.header');
+
+                if (headerRow) {
+                    // Adiciona os itens em ordem reversa (mais recente no topo)
+                    previousCalls.slice().reverse().forEach(call => {
+                        const isPrioritarioCall = call.ticket.startsWith('P-');
+                        const priorityClass = isPrioritarioCall ? 'prioritaria' : '';
+                        
+                        const html = `
+                            <div class="row call-item ${priorityClass}">
+                                <div class="col-4">${call.ticket}</div>
+                                <div class="col-4">${call.window}</div>
+                                <div class="col-4 text-muted">${call.time}</div>
+                            </div>
+                        `;
+                        // Inserir APÓS o cabeçalho
+                        headerRow.insertAdjacentHTML('afterend', html);
+                    });
+                }
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        // EXECUÇÃO INICIAL E POLLING
+        // -----------------------------------------------------------------------
+
+        // Inicializa a acessibilidade
+        initAcessibility();
+        
+        // Inicializa o relógio e o Polling
+        atualizarRelogio();
+        setInterval(atualizarRelogio, 1000);
+
+        // Inicializa o monitoramento e o Polling (leitura a cada 500ms)
+        updateMonitor();
+        setInterval(updateMonitor, 500);
+        
+        // Lógica de Sincronização em tempo real (Storage Event)
+        window.addEventListener('storage', updateMonitor);
+
+    </script>
+</body>
+</html>

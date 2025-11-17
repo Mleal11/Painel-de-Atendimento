@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Atendimento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <style>
+        /* Estilo para manter a proporção original dos vídeos */
+        .owl-carousel .item video {
+            width: 100%;
+            height: auto;
+        }
+        
+        /* Estilo para os números grandes */
+        .ticket-number {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .current-ticket {
+            font-size: 5rem;
+            font-weight: bold;
+            text-align: center;
+            color: #dc3545;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .ticket-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .ticket-card {
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+        
+        .btn-generate {
+            font-size: 1.5rem;
+            padding: 15px 30px;
+        }
+        
+        .btn-attend {
+            font-size: 1.5rem;
+            padding: 15px 30px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-8 text-start">
+                    <h1>Painel de Atendimento</h1>
+                </div>
+                <div class="col-4 text-end">
+                    <div id="relogio" class="fs-4 fw-bold">---</div> 
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mt-3">
+                    <div class="card-header bg-info text-white">
+                        <h2>Painel de Entrada de Senhas</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <button id="generateTicket" class="btn btn-success btn-generate mb-4">
+                            Gerar Nova Senha
+                        </button>
+                        <div class="ticket-list">
+                            <h4>Últimas senhas geradas:</h4>
+                            <div id="generatedTickets" class="mt-3">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mt-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h2>Mídia</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="owl-carousel" id="videoCarousel">
+                            <div class="item"><video src="video1.mp4" autoplay loop muted></video></div>
+                            <div class="item"><video src="video2.mp4" autoplay loop muted></video></div>
+                            <div class="item"><video src="video3.mp4" autoplay loop muted></video></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mt-3">
+                    <div class="card-header bg-success text-white">
+                        <h2>Painel de Atendimento de Senhas</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <button id="attendTicket" class="btn btn-warning btn-attend mb-4">
+                            Atender Próxima Senha
+                        </button>
+                        <div class="ticket-list">
+                            <h4>Últimas senhas atendidas:</h4>
+                            <div id="attendedTickets" class="mt-3">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h2>Painel Atual</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>Última senha gerada:</h3>
+                                <div id="lastGenerated" class="ticket-number">---</div>
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Senha em atendimento:</h3>
+                                <div id="currentTicket" class="current-ticket">---</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+        // Variável global para armazenar as vozes do navegador
+        let portugueseVoice = null;
+
+        // Função para carregar as vozes e encontrar uma em português
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            portugueseVoice = voices.find(voice => voice.lang === 'pt-BR' || voice.lang === 'pt-PT');
+        }
+        
+        // Garante que as vozes sejam carregadas (necessário em alguns navegadores)
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices(); // Tenta carregar imediatamente
+
+        // --- FUNÇÃO DE NOTIFICAÇÃO SONORA (Funcionalidade 7) ---
+        function speakTicket(ticketNumber) {
+            if (!('speechSynthesis' in window)) {
+                console.warn("A API Speech Synthesis não é suportada por este navegador.");
+                return;
+            }
+            
+            const texto = `Senha ${ticketNumber}. Dirija-se ao guichê de atendimento.`;
+            const utterance = new SpeechSynthesisUtterance(texto);
+            
+            if (portugueseVoice) {
+                utterance.voice = portugueseVoice;
+            } else {
+                // Tenta definir o idioma se não encontrou uma voz específica
+                utterance.lang = 'pt-BR'; 
+            }
+            
+            utterance.rate = 0.9; // Velocidade de fala
+            
+            // Interrompe qualquer fala anterior e inicia a nova
+            window.speechSynthesis.cancel(); 
+            window.speechSynthesis.speak(utterance);
+        }
+        // --- FIM DA FUNÇÃO DE FALA ---
+        
+        // --- CÓDIGO DO RELÓGIO (Funcionalidade 4) ---
+        function atualizarRelogio() {
+            const agora = new Date();
+            const opcoesHora = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZone: 'America/Sao_Paulo'
+            };
+            
+            const opcoesData = {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                timeZone: 'America/Sao_Paulo'
+            };
+
+            const dataFormatada = agora.toLocaleDateString('pt-BR', opcoesData);
+            const horaFormatada = agora.toLocaleTimeString('pt-BR', opcoesHora);
+
+            const textoRelogio = `${dataFormatada} | ${horaFormatada}`;
+
+            const elementoRelogio = document.getElementById('relogio');
+            if (elementoRelogio) {
+                elementoRelogio.textContent = textoRelogio;
+            }
+        }
+        
+        atualizarRelogio();
+        setInterval(atualizarRelogio, 1000);
+        // --- FIM DO CÓDIGO DO RELÓGIO ---
+        
+        // Variáveis globais para o sistema de senhas
+        let ticketCounter = 1000;
+        let generatedTickets = [];
+        let attendedTickets = [];
+        const maxDisplayedTickets = 8;
+        
+        // Inicializa o carrossel
+        $('#videoCarousel').owlCarousel({
+            items: 1,
+            loop: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: false,
+            nav: false,
+            dots: false,
+        });
+        
+        // Gerar nova senha
+        $('#generateTicket').click(function() {
+            const newTicket = ticketCounter++;
+            generatedTickets.unshift(newTicket);
+            
+            $('#lastGenerated').text(newTicket);
+            
+            updateGeneratedTicketsDisplay();
+        });
+        
+        // Atender próxima senha (INTEGRAÇÃO DA NOTIFICAÇÃO SONORA AQUI)
+        $('#attendTicket').click(function() {
+            if (generatedTickets.length > 0) {
+                // Pega a próxima senha a ser atendida
+                const nextTicket = generatedTickets.pop();
+                attendedTickets.unshift(nextTicket);
+                
+                // Atualiza o display visual
+                $('#currentTicket').text(nextTicket);
+                
+                // ********* CHAMA A FUNÇÃO DE FALA *********
+                speakTicket(nextTicket); 
+                // *******************************************
+                
+                updateGeneratedTicketsDisplay();
+                updateAttendedTicketsDisplay();
+                
+                if (generatedTickets.length === 0) {
+                    $('#lastGenerated').text('---');
+                }
+            } else {
+                alert('Não há senhas para atender!');
+            }
+        });
+        
+        // Atualiza a exibição das senhas geradas
+        function updateGeneratedTicketsDisplay() {
+            const displayElement = $('#generatedTickets');
+            displayElement.empty();
+            
+            const ticketsToShow = generatedTickets.slice(0, maxDisplayedTickets);
+            
+            ticketsToShow.forEach(ticket => {
+                displayElement.append(`
+                    <div class="ticket-card">
+                        <div class="ticket-number">${ticket}</div>
+                    </div>
+                `);
+            });
+        }
+        
+        // Atualiza a exibição das senhas atendidas
+        function updateAttendedTicketsDisplay() {
+            const displayElement = $('#attendedTickets');
+            displayElement.empty();
+            
+            const ticketsToShow = attendedTickets.slice(0, maxDisplayedTickets);
+            
+            ticketsToShow.forEach(ticket => {
+                displayElement.append(`
+                    <div class="ticket-card">
+                        <div class="ticket-number">${ticket}</div>
+                    </div>
+                `);
+            });
+        }
+    </script>
+</body>
+</html>
