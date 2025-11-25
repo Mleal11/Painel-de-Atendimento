@@ -8,67 +8,217 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <style>
-        /* Estilo para manter a proporção original dos vídeos */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            padding: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .container-fluid {
+            padding: 10px;
+        }
+
+        .card {
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .ticket-number {
+            font-size: 2rem;
+            margin: 10px 0;
+            word-wrap: break-word;
+        }
+
+        .current-ticket {
+            font-size: 3.5rem;
+            font-weight: bold;
+            word-wrap: break-word;
+        }
+
+        .ticket-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .ticket-card {
+            margin-bottom: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .btn-generate,
+        .btn-attend {
+            font-size: 1rem;
+            padding: 10px 15px;
+            width: 100%;
+        }
+
         .owl-carousel .item video {
             width: 100%;
             height: auto;
         }
-        
-        /* Estilo para os números grandes */
-        .ticket-number {
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            margin: 10px 0;
+
+        /* Media Queries para Tablets */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .container-fluid {
+                padding: 5px;
+            }
+
+            .card {
+                margin-bottom: 10px;
+            }
+
+            .card h2 {
+                font-size: 1.1rem;
+            }
+
+            .ticket-number {
+                font-size: 1.5rem;
+            }
+
+            .current-ticket {
+                font-size: 2.5rem;
+            }
+
+            .ticket-list {
+                max-height: 250px;
+            }
+
+            .btn-generate,
+            .btn-attend {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
         }
-        
-        .current-ticket {
-            font-size: 5rem;
-            font-weight: bold;
-            text-align: center;
-            color: #dc3545;
-            animation: pulse 1.5s infinite;
+
+        /* Media Queries para Mobile */
+        @media (max-width: 480px) {
+            header {
+                padding: 8px;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 1.1rem;
+            }
+
+            .container-fluid {
+                padding: 0;
+            }
+
+            .row {
+                margin: 0;
+            }
+
+            .row > [class*='col-'] {
+                padding: 3px;
+            }
+
+            .card {
+                margin-bottom: 8px;
+                border-radius: 5px;
+            }
+
+            .card-header {
+                padding: 8px !important;
+            }
+
+            .card-body {
+                padding: 8px !important;
+            }
+
+            .card h2 {
+                font-size: 0.95rem;
+            }
+
+            .ticket-number {
+                font-size: 1.2rem;
+            }
+
+            .current-ticket {
+                font-size: 2rem;
+            }
+
+            .ticket-list {
+                max-height: 200px;
+            }
+
+            .ticket-card {
+                margin-bottom: 5px;
+                padding: 5px;
+                font-size: 0.9rem;
+            }
+
+            .btn-generate,
+            .btn-attend {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+                margin-bottom: 8px;
+            }
+
+            h4 {
+                font-size: 0.95rem;
+            }
+
+            #relogio {
+                font-size: 0.9rem !important;
+            }
+
+            .mt-3,
+            .mt-4 {
+                margin-top: 10px !important;
+            }
+
+            .mb-4 {
+                margin-bottom: 10px !important;
+            }
         }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .ticket-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .ticket-card {
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            text-align: center;
-            background-color: #f8f9fa;
-        }
-        
-        .btn-generate {
-            font-size: 1.5rem;
-            padding: 15px 30px;
-        }
-        
-        .btn-attend {
-            font-size: 1.5rem;
-            padding: 15px 30px;
+
+        /* Melhorias para legibilidade em landscape mode */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .ticket-list {
+                max-height: 150px;
+            }
+
+            .current-ticket {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <header class="bg-primary text-white text-center py-3">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-8 text-start">
+                <div class="col-6 col-md-8 text-start">
                     <h1>Painel de Atendimento</h1>
                 </div>
-                <div class="col-4 text-end">
-                    <div id="relogio" class="fs-4 fw-bold">---</div> 
+                <div class="col-6 col-md-4 text-end">
+                    <div id="relogio" class="fs-6 fw-bold">---</div> 
                 </div>
             </div>
         </div>
@@ -76,26 +226,26 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4">
-                <div class="card mt-3">
+            <div class="col-12 col-md-4 mt-3">
+                <div class="card">
                     <div class="card-header bg-info text-white">
                         <h2>Painel de Entrada de Senhas</h2>
                     </div>
                     <div class="card-body text-center">
-                        <button id="generateTicket" class="btn btn-success btn-generate mb-4">
+                        <button id="generateTicket" class="btn btn-success btn-generate mb-3">
                             Gerar Nova Senha
                         </button>
                         <div class="ticket-list">
                             <h4>Últimas senhas geradas:</h4>
-                            <div id="generatedTickets" class="mt-3">
+                            <div id="generatedTickets" class="mt-2">
                                 </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card mt-3">
+            <div class="col-12 col-md-4 mt-3">
+                <div class="card">
                     <div class="card-header bg-secondary text-white">
                         <h2>Mídia</h2>
                     </div>
@@ -109,18 +259,18 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card mt-3">
+            <div class="col-12 col-md-4 mt-3">
+                <div class="card">
                     <div class="card-header bg-success text-white">
                         <h2>Painel de Atendimento de Senhas</h2>
                     </div>
                     <div class="card-body text-center">
-                        <button id="attendTicket" class="btn btn-warning btn-attend mb-4">
+                        <button id="attendTicket" class="btn btn-warning btn-attend mb-3">
                             Atender Próxima Senha
                         </button>
                         <div class="ticket-list">
                             <h4>Últimas senhas atendidas:</h4>
-                            <div id="attendedTickets" class="mt-3">
+                            <div id="attendedTickets" class="mt-2">
                                 </div>
                         </div>
                     </div>
@@ -128,7 +278,7 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row mt-3">
             <div class="col">
                 <div class="card">
                     <div class="card-header bg-warning">
@@ -136,11 +286,11 @@
                     </div>
                     <div class="card-body text-center">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6 mb-2">
                                 <h3>Última senha gerada:</h3>
                                 <div id="lastGenerated" class="ticket-number">---</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <h3>Senha em atendimento:</h3>
                                 <div id="currentTicket" class="current-ticket">---</div>
                             </div>

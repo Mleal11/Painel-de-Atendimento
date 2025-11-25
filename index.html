@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Atendimento - Central</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container-central {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header-central {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header-central h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-central p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-central {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .card-central:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            color: #333;
+        }
+
+        .card-central i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-central h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card-central p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Cores para diferentes cards */
+        .card-atendente {
+            border-top: 5px solid #28a745;
+        }
+        .card-atendente i { color: #28a745; }
+        .card-atendente:hover { border-top-color: #20c997; }
+
+        .card-agendamento {
+            border-top: 5px solid #0d6efd;
+        }
+        .card-agendamento i { color: #0d6efd; }
+        .card-agendamento:hover { border-top-color: #0dcaf0; }
+
+        .card-painel {
+            border-top: 5px solid #dc3545;
+        }
+        .card-painel i { color: #dc3545; }
+        .card-painel:hover { border-top-color: #fd7e14; }
+
+        .card-painel-monitor {
+            border-top: 5px solid #17a2b8;
+        }
+        .card-painel-monitor i { color: #17a2b8; }
+        .card-painel-monitor:hover { border-top-color: #20c997; }
+
+        .card-feedback {
+            border-top: 5px solid #ffc107;
+        }
+        .card-feedback i { color: #ffc107; }
+        .card-feedback:hover { border-top-color: #fd7e14; }
+
+        .footer-central {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-central p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-central h1 {
+                font-size: 2rem;
+            }
+
+            .header-central p {
+                font-size: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .card-central {
+                padding: 20px;
+                min-height: 180px;
+            }
+
+            .card-central i {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
+
+            .card-central h2 {
+                font-size: 1.1rem;
+            }
+
+            .card-central p {
+                font-size: 0.8rem;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            .container-central {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+                justify-content: flex-start;
+                padding-top: 20px;
+            }
+
+            .header-central {
+                margin-bottom: 20px;
+            }
+
+            .header-central h1 {
+                font-size: 1.5rem;
+                margin-bottom: 5px;
+            }
+
+            .header-central p {
+                font-size: 0.9rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+
+            .card-central {
+                padding: 15px;
+                min-height: 150px;
+            }
+
+            .card-central i {
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+
+            .card-central h2 {
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+
+            .card-central p {
+                font-size: 0.75rem;
+            }
+
+            .footer-central {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .footer-central p {
+                font-size: 0.8rem;
+            }
+
+            .version-badge {
+                font-size: 0.75rem;
+                padding: 3px 10px;
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container-central {
+                margin: 10px auto;
+            }
+
+            .header-central {
+                margin-bottom: 15px;
+            }
+
+            .header-central h1 {
+                font-size: 1.5rem;
+                margin-bottom: 3px;
+            }
+
+            .cards-grid {
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .card-central {
+                min-height: 120px;
+                padding: 15px;
+            }
+
+            .footer-central {
+                margin-top: 10px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-central">
+        <div class="header-central">
+            <h1>🎯 Painel de Atendimento</h1>
+            <p>Central de Controle e Monitoramento</p>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Card Atendente -->
+            <a href="Atendente.html" class="card-central card-atendente" target="_blank">
+                <i class="fas fa-user-tie"></i>
+                <h2>Central do Atendente</h2>
+                <p>Gerencie senhas, fila e atendimento</p>
+            </a>
+
+            <!-- Card Agendamento -->
+            <a href="Agendamento.html" class="card-central card-agendamento" target="_blank">
+                <i class="fas fa-calendar-alt"></i>
+                <h2>Agendamento</h2>
+                <p>Marque seus compromissos</p>
+            </a>
+
+            <!-- Card Painel de Atendimento -->
+            <a href="Atendimento4.html" class="card-central card-painel" target="_blank">
+                <i class="fas fa-tv"></i>
+                <h2>Painel de Atendimento</h2>
+                <p>Exiba números e informações</p>
+            </a>
+
+            <!-- Card Painel Monitor -->
+            <a href="Painelmonitor.html" class="card-central card-painel-monitor" target="_blank">
+                <i class="fas fa-monitor"></i>
+                <h2>Painel Monitor</h2>
+                <p>Monitore atendimentos em tempo real</p>
+            </a>
+
+            <!-- Card Feedback -->
+            <a href="Feedback.html" class="card-central card-feedback" target="_blank">
+                <i class="fas fa-comments"></i>
+                <h2>Avaliação</h2>
+                <p>Deixe seu feedback do atendimento</p>
+            </a>
+        </div>
+
+        <div class="footer-central">
+            <p><strong>📱 Versão Mobile-Responsive</strong></p>
+            <p>Otimizado para desktop, tablet e smartphone</p>
+            <p>
+                <i class="fas fa-check-circle"></i> Compatível com todos os navegadores modernos
+            </p>
+            <div class="version-badge">v2.0 - Responsive Design</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -127,12 +127,20 @@
             color: #ffffff; 
             padding: 15px 0; 
             overflow: hidden; 
-            border-top: 5px solid var(--bs-warning); /* Linha de destaque */
-            margin-top: auto; /* Garante que ocupe o rodapé */
+            border-top: 5px solid var(--bs-warning); 
+            margin-top: auto;
         }
         .announcement-text { 
             font-size: 1.6rem; 
-            font-weight: 700; 
+            font-weight: 700;
+            animation: scroll 15s linear infinite;
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
         .time-display { 
             font-size: 2.5rem; 
@@ -205,9 +213,213 @@
         body.alto-contraste .bg-warning h2 {
             color: #000 !important;
         }
+        /* Alto Contraste */
+        body.alto-contraste { 
+            background-color: #000 !important; 
+            color: #fff !important; 
+        }
+        body.alto-contraste .card, 
+        body.alto-contraste .card-body,
+        body.alto-contraste .contact-info { 
+            background-color: #333 !important; 
+            border-color: #fff !important; 
+            color: #fff !important; 
+        }
+        body.alto-contraste .previous-calls .header, 
+        body.alto-contraste .text-secondary,
+        body.alto-contraste .text-muted { 
+            color: #ccc !important; 
+        }
+        body.alto-contraste .bg-primary, 
+        body.alto-contraste .bg-info, 
+        body.alto-contraste .bg-success,
+        body.alto-contraste .bg-warning {
+            filter: brightness(180%);
+            color: #000; 
+        }
+        body.alto-contraste .bg-primary h1,
+        body.alto-contraste .bg-info h2,
+        body.alto-contraste .bg-success h2,
+        body.alto-contraste .bg-warning h2 {
+            color: #000 !important;
+        }
         body.alto-contraste .prioridade-destaque {
             color: #ffff00 !important;
             text-shadow: 0 0 15px rgba(255, 255, 0, 0.9);
+        }
+
+        /* Media Queries para Tablets */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .card h2 {
+                font-size: 1.1rem;
+            }
+
+            .current-ticket {
+                font-size: 4rem;
+            }
+
+            .time-display {
+                font-size: 1.8rem;
+            }
+
+            .announcement-text {
+                font-size: 1.2rem;
+            }
+
+            #relogio {
+                font-size: 1rem !important;
+            }
+
+            .container-fluid {
+                padding: 5px;
+            }
+
+            .card {
+                margin-bottom: 10px;
+            }
+
+            .ticket-list {
+                max-height: 250px;
+            }
+        }
+
+        /* Media Queries para Mobile */
+        @media (max-width: 480px) {
+            header {
+                padding: 8px !important;
+            }
+
+            header h1 {
+                font-size: 1.1rem;
+            }
+
+            .container-fluid {
+                padding: 0;
+            }
+
+            .row {
+                margin: 0;
+            }
+
+            .row > [class*='col-'] {
+                padding: 2px;
+            }
+
+            .card {
+                margin-bottom: 8px;
+                border-radius: 5px;
+            }
+
+            .card-header {
+                padding: 8px !important;
+            }
+
+            .card-body {
+                padding: 8px !important;
+            }
+
+            .card h2 {
+                font-size: 0.95rem;
+            }
+
+            .card h3 {
+                font-size: 0.9rem;
+            }
+
+            .card h4 {
+                font-size: 0.85rem;
+            }
+
+            .current-ticket {
+                font-size: 2.5rem;
+                line-height: 1.1;
+            }
+
+            .time-display {
+                font-size: 1.3rem;
+            }
+
+            .previous-calls .call-item {
+                font-size: 0.8rem;
+            }
+
+            .previous-calls .header {
+                font-size: 0.85rem;
+            }
+
+            .announcement-text {
+                font-size: 0.9rem;
+                padding-left: 100%;
+            }
+
+            #relogio {
+                font-size: 0.75rem !important;
+            }
+
+            .contact-info {
+                padding: 8px !important;
+                font-size: 0.85rem;
+            }
+
+            .contact-info strong {
+                font-size: 0.95rem;
+            }
+
+            #accessibility-controls {
+                top: 50px;
+                left: 5px;
+            }
+
+            #accessibility-controls .btn {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+                margin: 2px;
+            }
+
+            p {
+                font-size: 0.85rem;
+            }
+
+            .text-muted {
+                font-size: 0.75rem;
+            }
+
+            .mt-3,
+            .mt-4 {
+                margin-top: 8px !important;
+            }
+
+            .mb-3,
+            .mb-4 {
+                margin-bottom: 8px !important;
+            }
+
+            .owl-carousel {
+                max-height: 250px;
+            }
+        }
+
+        /* Melhorias para landscape mode */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .current-ticket {
+                font-size: 2rem;
+            }
+
+            .ticket-list {
+                max-height: 120px;
+            }
+
+            header {
+                padding: 5px !important;
+            }
+
+            .card {
+                margin-bottom: 5px;
+            }
         }
     </style>
 </head>
@@ -233,7 +445,7 @@
     <div class="container-fluid flex-grow-1">
         <div class="row">
             
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card mt-3">
                     <div class="card-header bg-info text-white">
                         <h2>Informações & Tempo de Espera</h2>
@@ -263,7 +475,7 @@
                 </div>
             </div>
             
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card mt-3 h-100">
                     <div class="card-header bg-secondary text-white">
                         <h2>Mídia</h2>
@@ -278,7 +490,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card mt-3 h-100">
                     <div class="card-header bg-success text-white">
                         <h2>Últimos Atendimentos</h2>
@@ -302,11 +514,11 @@
                     </div>
                     <div class="card-body text-center">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6 mb-2">
                                 <h3>Senha:</h3>
                                 <div id="currentTicket" class="current-ticket">---</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 <h3>Guichê:</h3>
                                 <div id="currentWindow" class="current-ticket text-info">---</div>
                             </div>
@@ -319,9 +531,9 @@
     
     <footer class="announcement-bar">
         <div class="container-fluid">
-               <marquee class="announcement-text" behavior="scroll" direction="left" scrollamount="8">
+            <div class="announcement-text">
                 ✨ PROMOÇÃO DA SEMANA: Descontos de até 30% em todos os nossos serviços! Fale com o seu atendente. | NOVAS INSTALAÇÕES: Agora estamos abertos até às 18h! ✨
-            </marquee>
+            </div>
         </div>
     </footer>
 
